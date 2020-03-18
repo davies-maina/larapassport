@@ -12,5 +12,10 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('main');
 });
+/* Route::view('/{any}', 'app')->where('any', '.*'); */
+
+Route::get('/{any?}', function () {
+    return view('main');
+})->where('any', '.*');

@@ -16,8 +16,8 @@ window.Vue = require("vue");
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 import Vue from "vue";
-import VueRouter from 'vue-router'
-Vue.use(VueRouter)
+import VueRouter from "vue-router";
+Vue.use(VueRouter);
 import Vuetify from "vuetify";
 
 Vue.use(Vuetify);
@@ -31,9 +31,11 @@ Vue.component("appfooter", require("./components/Appfooter.vue").default);
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-import routes from './router/index'
+import routes from "./router/index";
+import store from "./store/index";
 const app = new Vue({
     vuetify: new Vuetify(),
     el: "#app",
-    router: new VueRouter(routes),
+    store,
+    router: new VueRouter(routes)
 });

@@ -29,7 +29,7 @@
         <v-content>
             <v-container class="fill-height" fluid>
                 <v-row align="center" justify="center">
-                    <v-col class="shrink p-5">
+                    <v-col class="shrink" cols="12" sm="12" md="12">
                         <router-view></router-view>
                     </v-col>
                 </v-row>

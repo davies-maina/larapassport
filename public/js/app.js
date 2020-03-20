@@ -1982,11 +1982,15 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     validate: function validate() {
       if (this.$refs.form.validate()) {
-        this.snackbar = true;
+        /* this.snackbar = true; */
       }
     },
     login: function login() {
-      if (this.valid) {}
+      if (this.valid) {
+        axios.post("/api/login", this.form).then(function (res) {
+          console.log(res);
+        })["catch"](function () {});
+      }
     }
   },
   created: function created() {}
@@ -2089,17 +2093,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Signup",
   data: function data() {
     return {
       valid: true,
       form: {
-        email: "",
-        password: "",
         name: "",
-        password_confirmation: ""
+        email: "",
+        password: ""
       },
+      password_confirmation: "",
       passwordRule: [function (v) {
         return !!v || "Password is required is required";
       }, function (v) {
@@ -2116,23 +2129,46 @@ __webpack_require__.r(__webpack_exports__);
       confirm_passwordRule: [function (v) {
         return !!v || "confirm pass is required";
       }],
-      errors: {}
+      errors: {},
+      snackbar: {
+        show: false,
+        text: "success"
+      }
     };
   },
   methods: {
     validate: function validate() {
       if (this.$refs.form.validate()) {
-        this.snackbar = true;
+        /*  this.snackbar = true; */
       }
     },
     signUp: function signUp() {
-      if (this.valid) {}
+      var _this = this;
+
+      if (this.valid) {
+        axios.post("/api/register", this.form).then(function (res) {
+          if (res.data && res.status == 201) {
+            /* this.snackbar.show = true; */
+            _this.snackbar = {
+              show: true,
+              text: "success"
+            };
+
+            _this.$router.push("/login");
+          }
+        })["catch"](function () {
+          _this.snackbar = {
+            show: true,
+            text: "failed"
+          };
+        });
+      }
     }
   },
   created: function created() {},
   computed: {
     comparePasswords: function comparePasswords() {
-      if (this.form.password !== this.form.password_confirmation) {
+      if (this.form.password !== this.password_confirmation) {
         return "passwords do not match";
       }
     }
@@ -37853,15 +37889,15 @@ var render = function() {
                               required: ""
                             },
                             model: {
-                              value: _vm.form.password_confirmation,
+                              value: _vm.password_confirmation,
                               callback: function($$v) {
-                                _vm.$set(_vm.form, "password_confirmation", $$v)
+                                _vm.password_confirmation = $$v
                               },
-                              expression: "form.password_confirmation"
+                              expression: "password_confirmation"
                             }
                           }),
                           _vm._v(" "),
-                          _vm.form.password_confirmation
+                          _vm.password_confirmation
                             ? _c(
                                 "div",
                                 {
@@ -37900,6 +37936,50 @@ var render = function() {
                   ),
                   _vm._v(" "),
                   _c("v-card-actions")
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "text-center ma-2" },
+                [
+                  _c(
+                    "v-snackbar",
+                    {
+                      model: {
+                        value: _vm.snackbar.show,
+                        callback: function($$v) {
+                          _vm.$set(_vm.snackbar, "show", $$v)
+                        },
+                        expression: "snackbar.show"
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                    " +
+                          _vm._s(_vm.snackbar.text) +
+                          "\n                    "
+                      ),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "pink", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.snackbar.show = false
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Close\n                    "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
                 ],
                 1
               )
@@ -95603,6 +95683,13 @@ try {
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+var token = document.head.querySelector('meta[name="csrf-token"]');
+
+if (token) {
+  window.axios.defaults.headers.common["X-CSRF-TOKEN"] = token.content;
+} else {
+  console.error("CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token");
+}
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

@@ -46,8 +46,11 @@ class AuthController extends Controller
 
         ]);
 
-        return response()->json([
-            'message' => 'Successfully created user!'
-        ], 201);
+        if($user){
+            return response()->json([
+                'message' => 'Successfully created user!'
+            ], 201);
+
+        }
     }
 }

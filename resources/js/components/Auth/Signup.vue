@@ -52,7 +52,7 @@
                             <v-text-field
                                 id="confirm_password"
                                 label="confirm password"
-                                v-model="form.password_confirmation"
+                                v-model="password_confirmation"
                                 :rules="confirm_passwordRule"
                                 name="password_confirmation"
                                 prepend-icon="lock"
@@ -62,7 +62,7 @@
                             <div
                                 style="color:red"
                                 class="p-2"
-                                v-if="form.password_confirmation"
+                                v-if="password_confirmation"
                             >
                                 {{ comparePasswords }}
                             </div>
@@ -79,6 +79,15 @@
                     </v-card-text>
                     <v-card-actions> </v-card-actions>
                 </v-card>
+                <div class="text-center ma-2">
+                    <!-- <v-btn dark @click="snackbar = true">Open Snackbar</v-btn> -->
+                    <v-snackbar v-model="snackbar.show">
+                        {{ snackbar.text }}
+                        <v-btn color="pink" text @click="snackbar.show = false">
+                            Close
+                        </v-btn>
+                    </v-snackbar>
+                </div>
             </v-col>
         </v-row>
     </v-container>
@@ -91,11 +100,11 @@ export default {
         return {
             valid: true,
             form: {
-                email: "",
-                password: "",
                 name: "",
-                password_confirmation: ""
+                email: "",
+                password: ""
             },
+            password_confirmation: "",
             passwordRule: [
                 v => !!v || "Password is required is required",
                 v =>
@@ -109,17 +118,41 @@ export default {
             ],
             nameRules: [v => !!v || "Name is required"],
             confirm_passwordRule: [v => !!v || "confirm pass is required"],
-            errors: {}
+            errors: {},
+            snackbar: {
+                show: false,
+                text: "success"
+            }
         };
     },
     methods: {
         validate() {
             if (this.$refs.form.validate()) {
-                this.snackbar = true;
+                /*  this.snackbar = true; */
             }
         },
         signUp() {
             if (this.valid) {
+                axios
+                    .post("/api/register", this.form)
+                    .then(res => {
+                        if (res.data && res.status == 201) {
+                            /* this.snackbar.show = true; */
+
+                            this.snackbar = {
+                                show: true,
+                                text: "success"
+                            };
+
+                            this.$router.push("/login");
+                        }
+                    })
+                    .catch(() => {
+                        this.snackbar = {
+                            show: true,
+                            text: "failed"
+                        };
+                    });
             }
         }
     },
@@ -127,7 +160,7 @@ export default {
     created() {},
     computed: {
         comparePasswords() {
-            if (this.form.password !== this.form.password_confirmation) {
+            if (this.form.password !== this.password_confirmation) {
                 return "passwords do not match";
             }
         }

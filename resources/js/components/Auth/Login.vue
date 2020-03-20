@@ -74,11 +74,17 @@ export default {
     methods: {
         validate() {
             if (this.$refs.form.validate()) {
-                this.snackbar = true;
+                /* this.snackbar = true; */
             }
         },
         login() {
             if (this.valid) {
+                axios
+                    .post("/api/login", this.form)
+                    .then(res => {
+                        console.log(res);
+                    })
+                    .catch(() => {});
             }
         }
     },

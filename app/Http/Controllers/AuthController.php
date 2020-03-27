@@ -32,7 +32,8 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse(
                 $tokenResult->token->expires_at
-            )->toDateTimeString()
+            )->toDateTimeString(),
+            'logged_in_user' => $user,
         ]);
     }
 
@@ -46,11 +47,10 @@ class AuthController extends Controller
 
         ]);
 
-        if($user){
+        if ($user) {
             return response()->json([
                 'message' => 'Successfully created user!'
             ], 201);
-
         }
     }
 }

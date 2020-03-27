@@ -1,24 +1,26 @@
-import Login from '../components/Auth/Login.vue'
-import Signup from '../components/Auth/Signup.vue'
-export default {
+import Login from "../components/Auth/Login.vue";
+import Signup from "../components/Auth/Signup.vue";
+import dash from "../components/Dashboard.vue";
 
-    mode: 'history',
-    routes: [
+export const routes = [{
+        path: "/login",
+        name: "Login",
+        component: Login
+    },
 
-        {
-            path: '/login',
-            name: 'Login',
-            component: Login,
-        },
+    {
+        path: "/signup",
+        name: "Signup",
+        component: Signup
+    },
 
-        {
+    {
+        path: "/dash",
+        name: "Dash",
+        component: dash,
 
-            path: '/signup',
-            name: 'Signup',
-            component: Signup,
-
+        meta: {
+            requiresAuth: true
         }
-    ]
-
-
-}
+    }
+];

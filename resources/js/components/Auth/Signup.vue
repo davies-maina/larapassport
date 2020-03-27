@@ -94,6 +94,7 @@
 </template>
 
 <script>
+import { signup } from "../../helpers/auth";
 export default {
     name: "Signup",
     data() {
@@ -133,25 +134,17 @@ export default {
         },
         signUp() {
             if (this.valid) {
-                axios
-                    .post("/api/register", this.form)
-                    .then(res => {
-                        if (res.data && res.status == 201) {
-                            /* this.snackbar.show = true; */
+                this.$store.commit("signup");
 
-                            this.snackbar = {
-                                show: true,
-                                text: "success"
-                            };
-
-                            this.$router.push("/login");
-                        }
+                signup(this.$data.form)
+                    .then(response => {
+                        this.$store.commit("signup_success");
+                        this.$router.push("/login");
                     })
-                    .catch(() => {
-                        this.snackbar = {
-                            show: true,
-                            text: "failed"
-                        };
+
+                    .catch(error => {
+                        this.$store.commit("signup_error", error);
+                        console.log(this.$store.getters.auth_error);
                     });
             }
         }

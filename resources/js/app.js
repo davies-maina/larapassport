@@ -17,7 +17,9 @@ window.Vue = require("vue");
  */
 import Vue from "vue";
 import VueRouter from "vue-router";
+import Vuex from "vuex";
 Vue.use(VueRouter);
+Vue.use(Vuex);
 import Vuetify from "vuetify";
 
 Vue.use(Vuetify);
@@ -31,11 +33,39 @@ Vue.component("appfooter", require("./components/Appfooter.vue").default);
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-import routes from "./router/index";
-import store from "./store/index";
+import { routes } from "./router/index";
+import storeAppData from "./store/index";
+
+const store = new Vuex.Store(storeAppData);
+
+const router = new VueRouter({
+    routes,
+    mode: "history"
+});
+
+router.beforeEach((to, from, next) => {
+    /* const requiresAuth = to.matched.some(record => record.meta.requiresAuth); */
+    const currentUser = store.state.currentUser;
+    const publicPages = ["/login", "/signup"];
+
+    const authRequired = !publicPages.includes(to.path);
+
+    if (authRequired && !currentUser) {
+        next("/login");
+    } else if (
+        (to.path == "/login" && currentUser) ||
+        (to.path == "/signup" && currentUser)
+    ) {
+        next("/dash");
+    } else {
+        next();
+    }
+});
+
 const app = new Vue({
-    vuetify: new Vuetify(),
     el: "#app",
-    store,
-    router: new VueRouter(routes)
+    vuetify: new Vuetify(),
+    router,
+
+    store
 });

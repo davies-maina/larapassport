@@ -2,24 +2,56 @@
     <div>
         <v-navigation-drawer v-model="drawer" app clipped>
             <v-list dense>
-                <v-list-item :to="{ name: 'Login' }">
-                    <v-list-item-action>
-                        <v-icon>mdi-view-dashboard</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                        <v-list-item-title>
-                            Login
-                        </v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-                <v-list-item to="/signup">
-                    <v-list-item-action>
-                        <v-icon>mdi-settings</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                        <v-list-item-title>Signup</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
+                <template v-if="!currentUser">
+                    <v-list-item :to="{ name: 'Login' }">
+                        <v-list-item-action>
+                            <v-icon>mdi-view-dashboard</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                Login
+                            </v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+
+                    <v-list-item to="/signup">
+                        <v-list-item-action>
+                            <v-icon>mdi-settings</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title>Signup</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </template>
+                <template v-else>
+                    <v-list-item color="rgba(0, 0, 0, .4)" dark>
+                        <v-list-item-action>
+                            <v-icon>mdi-settings</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title class="title">{{
+                                currentUser.name
+                            }}</v-list-item-title>
+                            <!-- <v-list-item-subtitle></v-list-item-subtitle> -->
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item to="/dash">
+                        <v-list-item-action>
+                            <v-icon>mdi-settings</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title>Dashboard</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item @click="logout">
+                        <v-list-item-action>
+                            <v-icon>mdi-settings</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title>Logout</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </template>
             </v-list>
         </v-navigation-drawer>
         <v-app-bar app clipped-left>
@@ -47,6 +79,18 @@ export default {
     },
     created() {
         this.$vuetify.theme.dark = true;
+    },
+    methods: {
+        logout() {
+            this.$store.commit("logout");
+            this.$router.push("/login");
+        }
+    },
+
+    computed: {
+        currentUser() {
+            return this.$store.getters.currentUser;
+        }
     }
 };
 </script>

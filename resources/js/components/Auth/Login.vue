@@ -11,7 +11,7 @@
                         <v-form
                             ref="form"
                             v-model="valid"
-                            @submit.prevent="login"
+                            @submit.prevent="loginUser"
                             lazy-validation
                         >
                             <v-text-field
@@ -50,7 +50,9 @@
 </template>
 
 <script>
+import { login } from "../../helpers/auth";
 export default {
+    name: "Login",
     data() {
         return {
             valid: true,
@@ -77,17 +79,22 @@ export default {
                 /* this.snackbar = true; */
             }
         },
-        login() {
+        loginUser() {
             if (this.valid) {
-                axios
-                    .post("/api/login", this.form)
+                this.$store.dispatch("login");
+
+                login(this.$data.form)
                     .then(res => {
-                        console.log(res);
+                        this.$store.commit("login_success", res);
+                        this.$router.push("/dash");
                     })
-                    .catch(() => {});
+
+                    .catch(error => {
+                        this.$store.commit("login_error", error);
+                        console.log(this.$store.getters.auth_error);
+                    });
             }
         }
-    },
-    created() {}
+    }
 };
 </script>

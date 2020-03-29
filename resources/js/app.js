@@ -46,9 +46,15 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     /* const requiresAuth = to.matched.some(record => record.meta.requiresAuth); */
     const currentUser = store.state.currentUser;
-    const publicPages = ["/login", "/signup"];
+    /* const publicPages = [
+        "/login",
+        "/signup",
+        "/forgot-password",
+       
+      
+    ]; */
 
-    const authRequired = !publicPages.includes(to.path);
+    const authRequired = to.matched.some(record => record.meta.requiresAuth);
 
     if (authRequired && !currentUser) {
         next("/login");

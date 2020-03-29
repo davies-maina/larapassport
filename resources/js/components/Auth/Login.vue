@@ -42,7 +42,15 @@
                             >
                         </v-form>
                     </v-card-text>
-                    <v-card-actions> </v-card-actions>
+                    <v-card-actions
+                        ><v-btn
+                            text
+                            color="deep-purple accent-4"
+                            to="/forgot-password"
+                        >
+                            Forgot password?
+                        </v-btn>
+                    </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>

@@ -7,7 +7,15 @@ export function forgotpassword(email) {
             })
 
         .catch(error => {
-            reject(error);
+            if (error.message == "Request failed with status code 500") {
+                reject("Check your network");
+            } else if (
+                error.message == "Request failed with status code 404"
+            ) {
+                reject("we cannot find a user with that email address");
+            } else {
+                reject("unknown error");
+            }
         });
     });
 }

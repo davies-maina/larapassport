@@ -7,3 +7,14 @@
         </v-row>
     </v-container>
 </template>
+
+<script>
+export default {
+    /* created() {
+        let storedUser = localStorage.getItem("user");
+        let user = JSON.parse(storedUser);
+        let token = user.token;
+        console.log(token);
+    } */
+};
+</script>

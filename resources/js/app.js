@@ -23,6 +23,11 @@ Vue.use(Vuex);
 import Vuetify from "vuetify";
 
 Vue.use(Vuetify);
+
+import VueMoment from "vue-moment";
+
+
+Vue.use(require('vue-moment'));
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
@@ -35,6 +40,7 @@ Vue.component("appfooter", require("./components/Appfooter.vue").default);
  */
 import { routes } from "./router/index";
 import storeAppData from "./store/index";
+import Axios from "axios";
 
 const store = new Vuex.Store(storeAppData);
 
@@ -67,6 +73,17 @@ router.beforeEach((to, from, next) => {
         next();
     }
 });
+
+Axios.interceptors.response.use(null, (error) => {
+
+    if (error.response.status == 401) {
+
+        store.commit('logout');
+        router.push('/login')
+    }
+
+    return Promise.reject(error)
+})
 
 const app = new Vue({
     el: "#app",

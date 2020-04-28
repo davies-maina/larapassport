@@ -29,5 +29,13 @@ class AuthServiceProvider extends ServiceProvider
         //
 
         Passport::routes();
+
+        Gate::define('editusers', function ($user) {
+            return $user->hasRole('admin');
+        });
+
+        Gate::define('deleteusers', function ($user) {
+            return $user->hasRole('admin');
+        });
     }
 }

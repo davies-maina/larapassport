@@ -35,10 +35,11 @@
                 </v-card>
             </v-col>
         </v-row>
-        <div class="text-center ma-2">
-            <v-snackbar v-model="snackbar">
-                hfhf
-                <v-btn color="pink" text @click="snackbar = false">
+        <div class="text-center ma-2" v-if="snackbarComp">
+            <!-- <v-btn dark @click="snackbar = true">Open Snackbar</v-btn> -->
+            <v-snackbar value="snackbarComp" :multi-line="true">
+                {{ snackbarText }}
+                <v-btn color="pink" text @click="snackbar.show = false">
                     Close
                 </v-btn>
             </v-snackbar>
@@ -68,19 +69,29 @@ export default {
     methods: {
         sendForgetPassword() {
             if (this.valid) {
-                this.$store.dispatch("forgotpassword");
+                this.$store.commit("forgotpassword");
 
                 forgotpassword(this.$data.form)
                     .then(res => {
                         this.$store.commit("forgotpassword_success");
-                        console.log(this.$store.getters.snackbar);
+                        /* console.log(this.$store.getters.snackbar); */
                     })
                     .catch(error => {
                         this.$store.commit("forgotpassword_error", error);
                         /* console.log(this.$store.getters.success_message); */
-                        console.log(this.$data.snackbar);
+                        /* console.log(this.$data.snackbar); */
                     });
             }
+        }
+    },
+
+    computed: {
+        snackbarComp() {
+            return this.$store.getters.snackbar;
+        },
+
+        snackbarText() {
+            return this.$store.getters.text;
         }
     }
 };

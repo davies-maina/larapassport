@@ -52,6 +52,15 @@
                         </v-btn>
                     </v-card-actions>
                 </v-card>
+                <div class="text-center ma-2" v-if="snackbarComp">
+                    <!-- <v-btn dark @click="snackbar = true">Open Snackbar</v-btn> -->
+                    <v-snackbar value="snackbarComp">
+                        {{ snackbarText }}
+                        <v-btn color="pink" text @click="snackbar.show = false">
+                            Close
+                        </v-btn>
+                    </v-snackbar>
+                </div>
             </v-col>
         </v-row>
     </v-container>
@@ -68,6 +77,11 @@ export default {
                 email: "",
                 password: ""
             },
+
+            snackbar: {
+                show: false
+            },
+
             passwordRule: [
                 v => !!v || "Password is required is required",
                 v =>
@@ -81,6 +95,9 @@ export default {
             ]
         };
     },
+    created() {
+        this.$store.dispatch("clear");
+    },
     methods: {
         validate() {
             if (this.$refs.form.validate()) {
@@ -88,20 +105,33 @@ export default {
             }
         },
         loginUser() {
+            this.$store.dispatch("clear");
             if (this.valid) {
-                this.$store.dispatch("login");
-
+                this.$store.commit("login");
+                /* console.log(this.snackbar.show);
+                 */
                 login(this.$data.form)
                     .then(res => {
                         this.$store.commit("login_success", res);
+                        /* this.$store.commit("get_token"); */
                         this.$router.push("/dash");
+                        this.$store.dispatch("clear");
                     })
 
                     .catch(error => {
                         this.$store.commit("login_error", error);
-                        console.log(this.$store.getters.auth_error);
+                        /* console.log(error.message); */
                     });
             }
+        }
+    },
+    computed: {
+        snackbarComp() {
+            return this.$store.getters.snackbar;
+        },
+
+        snackbarText() {
+            return this.$store.getters.text;
         }
     }
 };

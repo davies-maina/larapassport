@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Role;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -46,6 +47,9 @@ class AuthController extends Controller
             'password' => Hash::make($request->password)
 
         ]);
+
+        $role = Role::select('id')->where('name', 'user')->first();
+        $user->roles()->attach($role);
 
         if ($user) {
             return response()->json([

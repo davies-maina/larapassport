@@ -3,6 +3,7 @@ import Signup from "../components/Auth/Signup.vue";
 import dash from "../components/Dashboard.vue";
 import forgotpassword from "../components/Forgotpassword.vue";
 import find from "../components/Resetpassword.vue";
+import usermanagement from '../components/Admin/UserManagement.vue'
 
 export const routes = [{
         path: "/login",
@@ -34,5 +35,12 @@ export const routes = [{
         meta: {
             requiresAuth: true
         }
+    },
+    {
+        path: "/admin/users",
+        name: "AdminUsers",
+        component: usermanagement,
+
+
     }
 ];

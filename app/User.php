@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Role;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -38,10 +39,34 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_online_at' => 'datetime',
     ];
+
+    /* protected $dateFormat = 'U'; */
 
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new \App\Notifications\PasswordResetRequest($token));
+    }
+
+    public function roles()
+    {
+
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function hasAnyRoles($roles)
+    {
+        if ($this->roles()->whereIn('name', $roles)->first()) {
+            return true;
+        }
+        return false;
+    }
+    public function hasRole($role)
+    {
+        if ($this->roles()->where('name', $role)->first()) {
+            return true;
+        }
+        return false;
     }
 }

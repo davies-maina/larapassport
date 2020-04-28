@@ -22,6 +22,16 @@ try {
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+let storedUser = JSON.parse(localStorage.getItem('user'));
+if (storedUser) {
+
+
+    const passportToken = `Bearer ${storedUser.token}`
+    window.axios.defaults.headers.common['Authorization'] = passportToken;
+} else {
+    console.log('no token')
+}
+
 
 let token = document.head.querySelector('meta[name="csrf-token"]');
 
